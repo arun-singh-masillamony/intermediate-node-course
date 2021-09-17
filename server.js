@@ -19,7 +19,22 @@ app.listen(port, ()=>{
 
 // CREATE
 app.post('/users',(req,res)=>{
-  // User.create()
+  User.create({
+    name: req.body.newData.name,
+    email:req.body.newData.email,
+    password: req.body.newData.password
+  },
+  (err,data)=>{
+    if(err){
+      res.json({success:false,message:err})
+    }
+    else if(!data){
+      res.json({success:false,message:"not found"})
+    }
+    else{
+      res.json({success:true,data:data})
+    }
+  })
 })
 
 // We are using route chaining as a shorthand for the "GET", "PUT", and "DELETE" routes, 
@@ -28,7 +43,19 @@ app.post('/users',(req,res)=>{
 app.route('/users/:id')
 // READ
 .get((req,res)=>{
-  // User.findById()
+  User.findById(req.params.id ,
+    (err,data)=>{
+      if(err){
+        res.json({success:false,message:err})
+      }
+      else if(!data){
+        res.json({success:false,message:"not found"})
+      }
+      else{
+        res.json({success:true,data:data})
+      }
+    }
+    )
 })
 // UPDATE
 .put((req,res)=>{
