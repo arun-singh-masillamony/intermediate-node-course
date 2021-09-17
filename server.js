@@ -58,6 +58,11 @@ app.route('/users/:id')
     )
 })
 // UPDATE
+//If you want to update a document in mongoDB, you can do it with the User.findByIdAndUpdate method. 
+//This takes three arguments (id, newData, callback). The id is still coming from "req.params", 
+//but newData is an object sent through the "req.body".
+// Also, by default the update method will return the unmodified document. We can add an "options" argument before the callback ({new:true})
+// to make it return the modified document.
 .put((req,res)=>{
   User.findByIdAndUpdate(
     req.params.id,
@@ -84,5 +89,18 @@ app.route('/users/:id')
 })
 // DELETE
 .delete((req,res)=>{
-  // User.findByIdAndDelete()
+  User.findByIdAndDelete(
+    req.params.id,
+    (err,data)=>{
+      if(err){
+        res.json({success:false,message:err})
+      }
+      else if(!data){
+        res.json({success:false,message:"not found"})
+      }
+      else{
+        res.json({success:true,data:data})
+      }
+    }
+  )
 })
